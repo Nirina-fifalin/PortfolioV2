@@ -54,9 +54,3 @@ git branch -M main
 git remote add origin https://github.com/Nirina-fifalin/<nom-du-repo>.git
 git push -u origin main
 ```
-
-### Déployer sur GitHub Pages (optionnel)
-
-1. Ajouter `base: "/<nom-du-repo>/"` dans `vite.config.ts` si le repo n'est pas nommé `<username>.github.io`.
-2. `npm run build`
-3. Publier le contenu de `dist/` sur la branche `gh-pages` (ex. via l'action GitHub `peaceiris/actions-gh-pages` ou l'extension `gh-pages`).
