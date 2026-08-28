@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nirina - Software Engineer</title>
+    
+    <!-- Polices professionnelles et modernes -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Plus Jakarta Sans pour un look Tech/Startup très premium -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'sans': ['"Plus Jakarta Sans"', 'sans-serif'],
+                        'mono': ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        'brand-dark': '#0a0a0a',
+                        'brand-gray': '#171717',
+                        'brand-light': '#fafafa',
+                        'accent-blue': '#2563eb',
+                        'accent-green': '#10b981',
+                    },
+                    boxShadow: {
+                        // Ombres douces et diffuses type "Apple/Stripe"
+                        'soft': '0 4px 40px rgba(0, 0, 0, 0.03)',
+                        'float': '0 10px 40px rgba(0, 0, 0, 0.08)',
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        body {
+            background-color: #fafafa;
+            /* Motif très subtil en arrière-plan pour ne pas faire "vide" */
+            background-image: radial-gradient(rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+            background-size: 24px 24px;
+            color: #0a0a0a;
+        }
+
+        /* Classes pour l'animation d'apparition au scroll */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Délais pour créer un effet de cascade */
+        .delay-100 { transition-delay: 100ms; }
+        .delay-200 { transition-delay: 200ms; }
+        .delay-300 { transition-delay: 300ms; }
+
+        /* Effet gradient sur le texte du héros */
+        .text-gradient {
+            background: linear-gradient(135deg, #0a0a0a 0%, #4b5563 100%);
+            -webkit-background-clip: text;
+            background-clip: text; /* Propriété standard ajoutée */
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Navbar Glassmorphism */
+        .glass-nav {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+    </style>
+</head>
+
+<body class="antialiased font-sans selection:bg-brand-dark selection:text-white">
+
+    <!-- NAVIGATION FLOTTANTE -->
+    <nav class="glass-nav fixed w-full top-0 z-50 transition-all duration-300">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex justify-between items-center">
+            <a href="#" class="font-bold text-xl tracking-tight flex items-center gap-2 group">
+                <div class="w-8 h-8 bg-brand-dark rounded-lg flex items-center justify-center transition-transform group-hover:rotate-12">
+                    <span class="text-white text-sm font-bold">N.</span>
+                </div>
+                Nirina Fifaliana
+            </a>
+            
+            <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-600">
+                <a href="#about" class="hover:text-brand-dark transition-colors" data-i18n="nav_about">À propos</a>
+                <a href="#expertise" class="hover:text-brand-dark transition-colors" data-i18n="nav_expertise">Expertise</a>
+                <a href="#projects" class="hover:text-brand-dark transition-colors" data-i18n="nav_projects">Projets</a>
+            </div>
+
+            <div class="hidden md:flex items-center gap-4">
+                <!-- Bouton de changement de langue -->
+                <button id="langToggle" class="text-xs font-bold text-gray-500 hover:text-brand-dark transition-colors tracking-widest">
+                    FR / EN
+                </button>
+                <a href="mailto:contact@email.com" class="px-5 py-2.5 bg-brand-dark text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all shadow-float hover:-translate-y-0.5" data-i18n="nav_contact">
+                    Me contacter
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+        
+        <!-- HEADER / HERO SECTION -->
+        <section class="min-h-[70vh] flex flex-col justify-center items-start md:items-center md:text-center reveal relative">
+            
+            <!-- Badge statut -->
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-gray-200 shadow-sm mb-8">
+                <span class="relative flex h-2.5 w-2.5">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-green opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent-green"></span>
+                </span>
+                <span class="text-xs font-medium text-gray-600" data-i18n="hero_badge">Disponible pour de nouvelles opportunités</span>
+            </div>
+
+            <h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight text-brand-dark mb-6 leading-tight">
+                Software Engineer<br>
+                <span class="text-gradient">Backend & Data.</span>
+            </h1>
+            
+            <p class="text-lg md:text-xl text-gray-500 max-w-2xl font-medium mb-10" data-i18n="hero_desc">
+                Je conçois des architectures distribuées robustes, explore les systèmes interactifs et intègre des agents IA. L'alliance de la rigueur algorithmique et de l'innovation.
+            </p>
+
+            <div class="flex flex-wrap items-center justify-center gap-4">
+                <a href="#projects" class="px-8 py-4 bg-brand-dark text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-float hover:-translate-y-1">
+                    Voir mes réalisations
+                </a>
+                <a href="https://github.com/Nirina-fifalin" target="_blank" class="px-8 py-4 bg-white text-brand-dark border border-gray-200 rounded-full font-medium hover:border-gray-300 hover:bg-gray-50 transition-all flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    GitHub
+                </a>
+            </div>
+        </section>
+
+        <!-- ABOUT (Bento Style) -->
+        <section id="about" class="py-24 border-t border-gray-100">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Texte de présentation -->
+                <div class="lg:col-span-2 bg-white rounded-3xl p-10 shadow-soft border border-gray-100 reveal">
+                    <h2 class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-4">À propos de moi</h2>
+                    <h3 class="text-3xl font-bold text-brand-dark mb-6 leading-snug">
+                        Transformer des concepts complexes en systèmes scalables.
+                    </h3>
+                    <p class="text-gray-600 text-lg leading-relaxed mb-6">
+                        Étudiant en Master spécialisé en <strong class="text-brand-dark">Génie Logiciel et Bases de Données</strong>. Je construis des architectures logicielles axées sur le Backend, la Data et l'IA, avec un souci constant pour le "clean design" et la maintenabilité.
+                    </p>
+                    <p class="text-gray-600 text-lg leading-relaxed">
+                        En dehors du développement d'entreprise traditionnel, j'explore le Game Dev, les simulations physiques et les systèmes interactifs. Mon objectif actuel est l'approfondissement des Systèmes Distribués et des Agents IA autonomes.
+                    </p>
+                </div>
+                
+                <!-- Bloc devise/photo -->
+                <div class="bg-brand-dark rounded-3xl p-10 text-white flex flex-col justify-between reveal delay-100 shadow-float">
+                    <div>
+                        <div class="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mb-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-white"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+                        </div>
+                        <h4 class="text-xl font-bold mb-2">Mon approche</h4>
+                        <p class="text-gray-400">Une itération constante pour des architectures parfaites.</p>
+                    </div>
+                    
+                    <div class="mt-8 pt-8 border-t border-white/10 font-mono text-sm">
+                        <span class="block text-accent-green mb-1">> process.run()</span>
+                        <span class="block">Build.</span>
+                        <span class="block">Experiment.</span>
+                        <span class="block">Learn.</span>
+                        <span class="block">Repeat.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- EXPERTISE (Grid) -->
+        <section id="expertise" class="py-24">
+            <h2 class="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center reveal">Domaines d'expertise</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Carte 1 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-soft hover:shadow-float transition-shadow group reveal">
+                    <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 border border-gray-100 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-brand-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-3">Systèmes Backend</h3>
+                    <p class="text-gray-500 mb-6">Architectures d'applications, APIs et micro-services. Focus sur la maintenabilité, la scalabilité et les principes de clean design.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded-md">NestJS</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded-md">FastAPI</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded-md">Java</span>
+                    </div>
+                </div>
+
+                <!-- Carte 2 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-soft hover:shadow-float transition-shadow group reveal delay-100">
+                    <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 border border-gray-100 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-brand-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-3">Data & Bases de Données</h3>
+                    <p class="text-gray-500 mb-6">Modélisation complexe, analyse, conception de Data Warehouse et architectures orientées flux de données.</p>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded-md">SQL/NoSQL</span>
+                        <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-mono rounded-md">Data Warehouse</span>
+                    </div>
+                </div>
+
+                <!-- Carte 3 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-soft hover:shadow-float transition-shadow group reveal">
+                    <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 border border-gray-100 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-brand-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-3">Intelligence Artificielle</h3>
+                    <p class="text-gray-500">Développement d'Agents IA autonomes, automatisation de processus et intégration de systèmes logiciels intelligents.</p>
+                </div>
+
+                <!-- Carte 4 -->
+                <div class="bg-white p-8 rounded-3xl border border-gray-100 shadow-soft hover:shadow-float transition-shadow group reveal delay-100">
+                    <div class="w-14 h-14 bg-gray-50 rounded-2xl flex items-center justify-center mb-6 border border-gray-100 group-hover:scale-110 transition-transform">
+                        <svg class="w-6 h-6 text-brand-dark" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-brand-dark mb-3">Game Dev & Physique</h3>
+                    <p class="text-gray-500">Création de mécaniques de jeu, implémentation de simulations physiques et conception de technologies interactives.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- TECHNOLOGIES (Progress Bars) -->
+        <section id="technologies" class="py-24 border-t border-gray-100">
+            <div class="text-center mb-16 reveal">
+                <h2 class="text-xs font-bold tracking-widest text-gray-400 uppercase mb-4">Ma Stack</h2>
+                <h3 class="text-3xl md:text-4xl font-bold text-brand-dark">Technologies Maîtrisées</h3>
+            </div>
+
+            <!-- Grille pour les technologies -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-10 max-w-5xl mx-auto">
+                
+                <!-- Catégorie: Langages Core -->
+                <div class="space-y-6 reveal">
+                    <h4 class="text-sm font-bold text-gray-400 uppercase border-b border-gray-100 pb-2 mb-6">Langages</h4>
+                    
+                    <!-- Java -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-[#e76f00] transition-colors">Java</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Fondation / Expert</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-[#e76f00] h-1.5 rounded-full w-[95%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- TypeScript -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-accent-blue transition-colors">TypeScript</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Avancé</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-accent-blue h-1.5 rounded-full w-[90%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- Python -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-[#3776ab] transition-colors">Python</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Avancé</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-brand-dark h-1.5 rounded-full w-[85%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie: Backend & Data -->
+                <div class="space-y-6 reveal delay-100">
+                    <h4 class="text-sm font-bold text-gray-400 uppercase border-b border-gray-100 pb-2 mb-6">Backend & Data</h4>
+                    
+                    <!-- NestJS -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-[#ea2845] transition-colors">NestJS</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Avancé</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-[#ea2845] h-1.5 rounded-full w-[85%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- FastAPI -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-accent-green transition-colors">FastAPI</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Intermédiaire</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-accent-green h-1.5 rounded-full w-[75%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- SQL / NoSQL -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-accent-blue transition-colors">SQL / Data Struct.</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Avancé</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-brand-dark h-1.5 rounded-full w-[80%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Catégorie: Game Dev & Autres -->
+                <div class="space-y-6 reveal delay-200">
+                    <h4 class="text-sm font-bold text-gray-400 uppercase border-b border-gray-100 pb-2 mb-6">Game Dev & Systèmes</h4>
+                    
+                    <!-- C# -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-[#9b4f96] transition-colors">C# (Unity)</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Intermédiaire</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-[#9b4f96] h-1.5 rounded-full w-[65%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- C++ -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-[#00599c] transition-colors">C++</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">Intermédiaire</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-[#00599c] h-1.5 rounded-full w-[60%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+
+                    <!-- ShaderLab / Math -->
+                    <div class="group">
+                        <div class="flex justify-between items-center mb-2">
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold text-brand-dark group-hover:text-accent-green transition-colors">ShaderLab / Phys.</span>
+                            </div>
+                            <span class="text-xs font-mono text-gray-500">En cours</span>
+                        </div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 overflow-hidden">
+                            <div class="bg-gray-300 h-1.5 rounded-full w-[40%] transition-all duration-1000 ease-out"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- PROJECTS -->
+        <section id="projects" class="py-24 border-t border-gray-100">
+            <h2 class="text-3xl md:text-4xl font-bold text-brand-dark mb-12 text-center reveal">Projets phares</h2>
+
+            <div class="space-y-12">
+                <!-- Projet 1 : ROBIA (Privé / Confidentiel) -->
+                <div class="bg-white rounded-[2rem] border border-gray-100 p-6 md:p-10 shadow-soft flex flex-col md:flex-row gap-10 items-center reveal group hover:shadow-float transition-shadow">
+                    <div class="w-full md:w-1/2 bg-gray-50 rounded-2xl aspect-video border border-gray-100 flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-gray-200 to-gray-50 opacity-50 group-hover:scale-105 transition-transform duration-700"></div>
+                        <svg class="w-16 h-16 text-gray-300 relative z-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <div class="flex items-center gap-3 mb-4">
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">Python</span>
+                            <span class="px-3 py-1 bg-accent-blue/10 text-accent-blue text-xs font-bold rounded-full">Backend Architecture</span>
+                            <span class="text-xs font-mono text-gray-400 border border-gray-200 px-2 py-1 rounded">Dépôt Privé</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-brand-dark mb-4">ROBIA System & Copilot</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Conception et développement de l'architecture backend d'un système intelligent. Conception des flux de données et intégration sécurisée d'outils analytiques. Le projet est sous clause de confidentialité, l'accent est donc mis sur la scalabilité, la sécurité des accès et la maintenabilité du code côté serveur.
+                        </p>
+                        <span class="inline-flex items-center gap-2 text-gray-400 font-semibold cursor-not-allowed">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+                            Code source confidentiel
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Projet 2 : Ocean Data Story (Public) -->
+                <div class="bg-white rounded-[2rem] border border-gray-100 p-6 md:p-10 shadow-soft flex flex-col md:flex-row-reverse gap-10 items-center reveal group hover:shadow-float transition-shadow">
+                    <div class="w-full md:w-1/2 bg-gray-50 rounded-2xl aspect-video border border-gray-100 flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-gray-200 to-gray-50 opacity-50 group-hover:scale-105 transition-transform duration-700"></div>
+                        <svg class="w-16 h-16 text-gray-300 relative z-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-accent-green/10 text-accent-green text-xs font-bold rounded-full">Dataviz</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">NetCDF 3D</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">HTML/JS</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-brand-dark mb-4">Ocean Data Story</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Visualisation interactive (scrollytelling) explorant la désoxygénation globale des océans et l'expansion des "zones mortes" marines. Développé en utilisant des données NetCDF 3D dans le cadre du <strong>Copernicus Marine Dataviz Challenge 2026</strong>.
+                        </p>
+                        <a href="https://github.com/Nirina-fifalin/ocean-data-story" target="_blank" class="inline-flex items-center gap-2 text-brand-dark font-semibold hover:text-accent-blue transition-colors">
+                            Voir sur GitHub <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Projet 3 : Don't Turn Back (Game Dev) -->
+                <div class="bg-white rounded-[2rem] border border-gray-100 p-6 md:p-10 shadow-soft flex flex-col md:flex-row gap-10 items-center reveal group hover:shadow-float transition-shadow">
+                    <div class="w-full md:w-1/2 bg-gray-50 rounded-2xl aspect-video border border-gray-100 flex items-center justify-center overflow-hidden relative">
+                        <div class="absolute inset-0 bg-gradient-to-tr from-gray-200 to-gray-50 opacity-50 group-hover:scale-105 transition-transform duration-700"></div>
+                        <svg class="w-16 h-16 text-gray-300 relative z-10" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div class="w-full md:w-1/2">
+                        <div class="flex flex-wrap gap-2 mb-4">
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">C#</span>
+                            <span class="px-3 py-1 bg-gray-100 text-gray-700 text-xs font-bold rounded-full">ShaderLab</span>
+                            <span class="px-3 py-1 bg-purple-100 text-purple-700 text-xs font-bold rounded-full">Game Jam+</span>
+                        </div>
+                        <h3 class="text-2xl font-bold text-brand-dark mb-4">Don't Turn Back</h3>
+                        <p class="text-gray-600 mb-6 leading-relaxed">
+                            Création d'un prototype de jeu jouable dans le cadre de la Game Jam+ 2025-2026. Travail sur les mécaniques de base en C# et implémentation d'effets visuels personnalisés via ShaderLab.
+                        </p>
+                        <a href="https://github.com/Nirina-fifalin/DTB-Prototype-2" target="_blank" class="inline-flex items-center gap-2 text-brand-dark font-semibold hover:text-accent-blue transition-colors">
+                            Voir le prototype <svg class="w-4 h-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER / CONTACT -->
+    <footer class="bg-white border-t border-gray-200 mt-10">
+        <div class="max-w-4xl mx-auto px-6 py-24 text-center reveal">
+            <h2 class="text-4xl md:text-5xl font-bold text-brand-dark mb-6">Prêt à collaborer ?</h2>
+            <p class="text-lg text-gray-500 mb-10 max-w-xl mx-auto">
+                Si vous cherchez un profil technique capable de concevoir des architectures robustes et de résoudre des problèmes complexes, discutons-en.
+            </p>
+            
+            <a href="mailto:contact@email.com" class="inline-block px-10 py-5 bg-brand-dark text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-float hover:-translate-y-1 text-lg mb-16">
+                contact@email.com
+            </a>
+
+            <div class="flex justify-center items-center gap-8 border-t border-gray-100 pt-10">
+                <a href="https://github.com/Nirina-fifalin" target="_blank" class="text-gray-400 hover:text-brand-dark transition-colors font-medium">GitHub</a>
+                <span class="w-1.5 h-1.5 bg-gray-300 rounded-full"></span>
+                <a href="#" class="text-gray-400 hover:text-brand-dark transition-colors font-medium">LinkedIn</a>
+            </div>
+            
+            <p class="text-gray-400 text-sm mt-8">
+                © 2026 Nirina Fifaliana Andriniaina. Built with logic & creativity.
+            </p>
+        </div>
+    </footer>
+
+    <!-- Script pour l'animation au scroll -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+
+            const revealOnScroll = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        // Optionnel : arrêter d'observer une fois animé
+                        observer.unobserve(entry.target); 
+                    }
+                });
+            }, {
+                root: null,
+                threshold: 0.15, // Déclenche quand 15% de l'élément est visible
+                rootMargin: "0px 0px -50px 0px"
+            });
+
+            reveals.forEach(reveal => {
+                revealOnScroll.observe(reveal);
+            });
+        });
+
+        // Dictionnaire des traductions
+        const translations = {
+            fr: {
+                nav_about: "À propos",
+                nav_expertise: "Expertise",
+                nav_projects: "Projets",
+                nav_contact: "Me contacter",
+                hero_badge: "Disponible pour de nouvelles opportunités",
+                hero_desc: "Je conçois des architectures distribuées robustes, explore les systèmes interactifs et intègre des agents IA. L'alliance de la rigueur algorithmique et de l'innovation."
+            },
+            en: {
+                nav_about: "About",
+                nav_expertise: "Expertise",
+                nav_projects: "Projects",
+                nav_contact: "Contact Me",
+                hero_badge: "Available for new opportunities",
+                hero_desc: "I design robust distributed architectures, explore interactive systems, and integrate AI agents. Combining algorithmic rigor with innovation."
+            }
+        };
+
+        // Langue par défaut
+        let currentLang = 'fr';
+
+        // Fonction pour mettre à jour les textes
+        function updateText() {
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+        }
+
+        // Écouteur sur le bouton de changement de langue
+        const langToggleBtn = document.getElementById('langToggle');
+        if(langToggleBtn) {
+            langToggleBtn.addEventListener('click', () => {
+                currentLang = currentLang === 'fr' ? 'en' : 'fr';
+                // Met à jour le texte du bouton
+                langToggleBtn.textContent = currentLang === 'fr' ? 'FR / EN' : 'EN / FR';
+                // Applique la traduction
+                updateText();
+            });
+        }
+    </script>
+</body>
+</html>
