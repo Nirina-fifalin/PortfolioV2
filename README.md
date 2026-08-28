@@ -38,7 +38,6 @@ npm run preview # sert le build localement
 - Textes FR/EN : `src/i18n/translations.ts`
 - Projets : `src/data/projects.ts`
 - Compétences / barres de progression : `src/data/skills.ts`
-- Email de contact : rechercher `contact@email.com` dans `Hero.tsx`/`Footer.tsx`/`Navbar.tsx`
 - Lien LinkedIn : `src/components/Footer.tsx`
 
 ## Déploiement

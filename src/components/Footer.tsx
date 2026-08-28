@@ -11,10 +11,10 @@ export function Footer() {
         <p className="text-lg text-gray-500 mb-10 max-w-xl mx-auto">{t("footer_desc")}</p>
 
         <a
-          href="mailto:contact@email.com"
+          href="mailto:nirin.fifalin@gmail.com"
           className="inline-block px-10 py-5 bg-brand-dark text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-float hover:-translate-y-1 text-lg mb-16"
         >
-          contact@email.com
+          nirin.fifalin@gmail.com
         </a>
 
         <div className="flex justify-center items-center gap-8 border-t border-gray-100 pt-10">

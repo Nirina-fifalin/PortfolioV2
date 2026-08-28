@@ -44,7 +44,7 @@ export function Navbar() {
             {lang === "fr" ? "FR / EN" : "EN / FR"}
           </button>
           <a
-            href="mailto:contact@email.com"
+            href="mailto:nirin.fifalin@gmail.com"
             className="px-5 py-2.5 bg-brand-dark text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all shadow-float hover:-translate-y-0.5"
           >
             {t("nav_contact")}
@@ -96,7 +96,7 @@ export function Navbar() {
                 {lang === "fr" ? "FR / EN" : "EN / FR"}
               </button>
               <a
-                href="mailto:contact@email.com"
+                href="mailto:nirin.fifalin@gmail.com"
                 className="px-5 py-2.5 bg-brand-dark text-white text-sm font-medium rounded-full text-center"
               >
                 {t("nav_contact")}
