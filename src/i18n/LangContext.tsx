@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
-import { translations, type TranslationKey } from "./translations";
+import { getTranslation, type TranslationKey } from "./translations";
 import type { Lang } from "../types";
 
 interface LangContextValue {
@@ -17,7 +17,7 @@ export function LangProvider({ children }: { children: ReactNode }) {
     () => ({
       lang,
       toggleLang: () => setLang((prev) => (prev === "fr" ? "en" : "fr")),
-      t: (key) => translations[lang][key],
+      t: (key) => getTranslation(lang, key),
     }),
     [lang],
   );

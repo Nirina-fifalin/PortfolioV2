@@ -7,7 +7,7 @@ export const translations = {
     nav_projects: "Projets",
     nav_contact: "Me contacter",
 
-    hero_badge: "Disponible pour de nouvelles opportunités",
+    //hero_badge: "Disponible pour de nouvelles opportunités",
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",
     hero_desc:
@@ -75,7 +75,7 @@ export const translations = {
     nav_projects: "Projects",
     nav_contact: "Contact Me",
 
-    //hero_badge: "Available for new opportunities",
+    hero_badge: "Available for new opportunities",
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",
     hero_desc:
@@ -140,3 +140,8 @@ export const translations = {
 } as const satisfies Record<Lang, Record<string, string>>;
 
 export type TranslationKey = keyof (typeof translations)["fr"];
+
+export function getTranslation(lang: Lang, key: TranslationKey): string {
+  const dictionary: Record<TranslationKey, string> = lang === "fr" ? translations.fr : translations.en;
+  return dictionary[key];
+}
