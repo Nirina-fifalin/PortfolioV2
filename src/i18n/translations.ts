@@ -75,7 +75,7 @@ export const translations = {
     nav_projects: "Projects",
     nav_contact: "Contact Me",
 
-    hero_badge: "Available for new opportunities",
+    //hero_badge: "Available for new opportunities",
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",
     hero_desc:
