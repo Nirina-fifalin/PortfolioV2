@@ -1,4 +1,5 @@
 import { About } from "./components/About";
+import { ContactModal } from "./components/ContactModal";
 import { Expertise } from "./components/Expertise";
 import { Footer } from "./components/Footer";
 import { Hero } from "./components/Hero";
@@ -6,23 +7,27 @@ import { Navbar } from "./components/Navbar";
 import { Projects } from "./components/Projects";
 import { ScrollProgress } from "./components/ScrollProgress";
 import { Technologies } from "./components/Technologies";
+import { ContactProvider } from "./context/ContactContext";
 import { LangProvider } from "./i18n/LangContext";
 
 function App() {
   return (
     <LangProvider>
-      <ScrollProgress />
-      <Navbar />
+      <ContactProvider>
+        <ScrollProgress />
+        <Navbar />
 
-      <main className="pt-32 pb-20 px-6 max-w-6xl mx-auto">
-        <Hero />
-        <About />
-        <Expertise />
-        <Technologies />
-        <Projects />
-      </main>
+        <main className="pt-32 pb-20 px-6 max-w-6xl mx-auto">
+          <Hero />
+          <About />
+          <Expertise />
+          <Technologies />
+          <Projects />
+        </main>
 
-      <Footer />
+        <Footer />
+        <ContactModal />
+      </ContactProvider>
     </LangProvider>
   );
 }

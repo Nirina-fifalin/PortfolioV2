@@ -1,5 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useState } from "react";
+import { useContact } from "../context/ContactContext";
 import { useLang } from "../i18n/LangContext";
 
 const navLinks: { href: string; key: "nav_about" | "nav_expertise" | "nav_projects" }[] = [
@@ -10,6 +11,7 @@ const navLinks: { href: string; key: "nav_about" | "nav_expertise" | "nav_projec
 
 export function Navbar() {
   const { lang, toggleLang, t } = useLang();
+  const { open: openContact } = useContact();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -43,12 +45,12 @@ export function Navbar() {
           >
             {lang === "fr" ? "FR / EN" : "EN / FR"}
           </button>
-          <a
-            href="mailto:nirin.fifalin@gmail.com"
+          <button
+            onClick={openContact}
             className="px-5 py-2.5 bg-brand-dark text-white text-sm font-medium rounded-full hover:bg-gray-800 transition-all shadow-float hover:-translate-y-0.5"
           >
             {t("nav_contact")}
-          </a>
+          </button>
         </div>
 
         <button
@@ -95,12 +97,15 @@ export function Navbar() {
               <button onClick={toggleLang} className="text-left text-xs font-bold text-gray-500 tracking-widest">
                 {lang === "fr" ? "FR / EN" : "EN / FR"}
               </button>
-              <a
-                href="mailto:nirin.fifalin@gmail.com"
+              <button
+                onClick={() => {
+                  setMenuOpen(false);
+                  openContact();
+                }}
                 className="px-5 py-2.5 bg-brand-dark text-white text-sm font-medium rounded-full text-center"
               >
                 {t("nav_contact")}
-              </a>
+              </button>
             </div>
           </motion.div>
         )}

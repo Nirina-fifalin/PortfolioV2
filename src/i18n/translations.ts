@@ -7,6 +7,15 @@ export const translations = {
     nav_projects: "Projets",
     nav_contact: "Me contacter",
 
+    contact_modal_title: "Me contacter",
+    contact_modal_desc: "Une question, une opportunité ? Remplis le formulaire, ça ouvrira ton client mail avec tout pré-rempli.",
+    contact_name: "Nom",
+    contact_email: "E-mail",
+    contact_subject: "Sujet",
+    contact_message: "Message",
+    contact_submit: "Envoyer le message",
+    contact_close: "Fermer",
+
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",
     hero_desc:
@@ -73,6 +82,15 @@ export const translations = {
     nav_expertise: "Expertise",
     nav_projects: "Projects",
     nav_contact: "Contact Me",
+
+    contact_modal_title: "Get in touch",
+    contact_modal_desc: "A question, an opportunity? Fill in the form — it will open your mail client with everything pre-filled.",
+    contact_name: "Name",
+    contact_email: "Email",
+    contact_subject: "Subject",
+    contact_message: "Message",
+    contact_submit: "Send message",
+    contact_close: "Close",
 
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",

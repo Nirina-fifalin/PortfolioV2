@@ -1,8 +1,11 @@
+import { useContact } from "../context/ContactContext";
+import { CONTACT_EMAIL } from "../data/contact";
 import { useLang } from "../i18n/LangContext";
 import { Reveal } from "./Reveal";
 
 export function Footer() {
   const { t } = useLang();
+  const { open: openContact } = useContact();
 
   return (
     <footer className="bg-white border-t border-gray-200 mt-10">
@@ -10,12 +13,12 @@ export function Footer() {
         <h2 className="text-4xl md:text-5xl font-bold text-brand-dark mb-6">{t("footer_title")}</h2>
         <p className="text-lg text-gray-500 mb-10 max-w-xl mx-auto">{t("footer_desc")}</p>
 
-        <a
-          href="mailto:nirin.fifalin@gmail.com"
+        <button
+          onClick={openContact}
           className="inline-block px-10 py-5 bg-brand-dark text-white rounded-full font-medium hover:bg-gray-800 transition-all shadow-float hover:-translate-y-1 text-lg mb-16"
         >
-          nirin.fifalin@gmail.com
-        </a>
+          {CONTACT_EMAIL}
+        </button>
 
         <div className="flex justify-center items-center gap-8 border-t border-gray-100 pt-10">
           <a
