@@ -28,7 +28,7 @@ interface Food {
 
 interface Predator {
   x: number;
-  y: number;
+  pageY: number;
   vx: number;
   vy: number;
   size: number;
@@ -95,10 +95,10 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, screenY: number, al
   ctx.restore();
 }
 
-function drawPredator(ctx: CanvasRenderingContext2D, predator: Predator) {
+function drawPredator(ctx: CanvasRenderingContext2D, predator: Predator, screenY: number) {
   const facingRight = predator.vx >= 0;
   ctx.save();
-  ctx.translate(predator.x, predator.y);
+  ctx.translate(predator.x, screenY);
   ctx.scale(facingRight ? 1 : -1, 1);
 
   ctx.fillStyle = "#0a0a0a";
@@ -247,7 +247,7 @@ export function Aquarium() {
           const fromLeft = Math.random() < 0.5;
           predatorRef.current = {
             x: fromLeft ? -80 : vw + 80,
-            y: randomBetween(vh * 0.25, vh * 0.65),
+            pageY: scrollY + randomBetween(vh * 0.25, vh * 0.65),
             vx: fromLeft ? PREDATOR_SPEED : -PREDATOR_SPEED,
             vy: 0,
             size: 42,
@@ -270,7 +270,7 @@ export function Aquarium() {
             if (fish.state === "eaten") continue;
             const screenY = fish.pageY - scrollY;
             if (screenY < -20 || screenY > vh + 20) continue;
-            const dist = Math.hypot(fish.x - predator.x, screenY - predator.y);
+            const dist = Math.hypot(fish.x - predator.x, fish.pageY - predator.pageY);
             if (dist < nearestDist) {
               nearestDist = dist;
               nearest = fish;
@@ -285,9 +285,8 @@ export function Aquarium() {
             predator.vx = predator.x < vw / 2 ? -PREDATOR_SPEED : PREDATOR_SPEED;
             predator.vy = 0;
           } else if (nearest) {
-            const nearestScreenY = nearest.pageY - scrollY;
             const dx = nearest.x - predator.x;
-            const dy = nearestScreenY - predator.y;
+            const dy = nearest.pageY - predator.pageY;
             const dist = Math.hypot(dx, dy) || 1;
             predator.vx = (dx / dist) * PREDATOR_SPEED;
             predator.vy = (dy / dist) * PREDATOR_SPEED;
@@ -300,7 +299,7 @@ export function Aquarium() {
         }
 
         predator.x += predator.vx * dt;
-        predator.y += predator.vy * dt;
+        predator.pageY += predator.vy * dt;
 
         if (predator.exiting && (predator.x < -120 || predator.x > vw + 120)) {
           predatorRef.current = null;
@@ -346,7 +345,7 @@ export function Aquarium() {
       }
 
       if (predatorRef.current) {
-        drawPredator(frontCtx, predatorRef.current);
+        drawPredator(frontCtx, predatorRef.current, predatorRef.current.pageY - scrollY);
       }
 
       rafRef.current = requestAnimationFrame(loop);
