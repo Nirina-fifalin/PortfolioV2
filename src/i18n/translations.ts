@@ -16,6 +16,8 @@ export const translations = {
     contact_submit: "Envoyer le message",
     contact_close: "Fermer",
 
+    aquarium_feed: "Nourrir les poissons",
+
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",
     hero_desc:
@@ -91,6 +93,8 @@ export const translations = {
     contact_message: "Message",
     contact_submit: "Send message",
     contact_close: "Close",
+
+    aquarium_feed: "Feed the fish",
 
     hero_title_1: "Software Engineer",
     hero_title_2: "Backend & Data.",
