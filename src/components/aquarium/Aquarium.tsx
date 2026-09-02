@@ -21,14 +21,14 @@ interface Fish {
 interface Food {
   id: number;
   x: number;
-  y: number;
+  pageY: number;
   vy: number;
   eaten: boolean;
 }
 
 interface Predator {
   x: number;
-  y: number;
+  pageY: number;
   vx: number;
   vy: number;
   size: number;
@@ -95,10 +95,10 @@ function drawFish(ctx: CanvasRenderingContext2D, fish: Fish, screenY: number, al
   ctx.restore();
 }
 
-function drawPredator(ctx: CanvasRenderingContext2D, predator: Predator) {
+function drawPredator(ctx: CanvasRenderingContext2D, predator: Predator, screenY: number) {
   const facingRight = predator.vx >= 0;
   ctx.save();
-  ctx.translate(predator.x, predator.y);
+  ctx.translate(predator.x, screenY);
   ctx.scale(facingRight ? 1 : -1, 1);
 
   ctx.fillStyle = "#0a0a0a";
@@ -141,6 +141,7 @@ export function Aquarium() {
   const phaseTimerRef = useRef(0);
   const rafRef = useRef(0);
   const lastTimeRef = useRef(0);
+  const scrollYRef = useRef(0);
   const [feedDisabled, setFeedDisabled] = useState(false);
 
   useEffect(() => {
@@ -170,6 +171,12 @@ export function Aquarium() {
 
     resize();
 
+    function handleScroll() {
+      scrollYRef.current = window.scrollY;
+    }
+    scrollYRef.current = window.scrollY;
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     fishRef.current = Array.from({ length: INITIAL_FISH_COUNT }, (_, i) =>
       createFish(i % 2 === 0 ? "back" : "front", getDocHeight(), window.innerWidth),
     );
@@ -180,17 +187,17 @@ export function Aquarium() {
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const scrollY = window.scrollY;
+      const scrollY = scrollYRef.current;
 
       backCtx.clearRect(0, 0, vw, vh);
       frontCtx.clearRect(0, 0, vw, vh);
 
-      // --- food physics (gentle fall) ---
+      // --- food physics (gentle fall, tracked in page-space so it follows scroll) ---
       for (const food of foodRef.current) {
         food.vy = Math.min(food.vy + 0.05 * dt, 1.8);
-        food.y += food.vy * dt;
+        food.pageY += food.vy * dt;
       }
-      foodRef.current = foodRef.current.filter((f) => !f.eaten && f.y < vh + 30);
+      foodRef.current = foodRef.current.filter((f) => !f.eaten && f.pageY - scrollY < vh + 30);
 
       // --- fish behaviour ---
       for (const fish of fishRef.current) {
@@ -202,8 +209,9 @@ export function Aquarium() {
             fish.state = "swim";
           } else {
             const screenY = fish.pageY - scrollY;
+            const targetScreenY = target.pageY - scrollY;
             const dx = target.x - fish.x;
-            const dy = target.y - screenY;
+            const dy = targetScreenY - screenY;
             const dist = Math.hypot(dx, dy) || 1;
             const speed = 2.6;
             fish.x += (dx / dist) * speed * dt;
@@ -239,7 +247,7 @@ export function Aquarium() {
           const fromLeft = Math.random() < 0.5;
           predatorRef.current = {
             x: fromLeft ? -80 : vw + 80,
-            y: randomBetween(vh * 0.25, vh * 0.65),
+            pageY: scrollY + randomBetween(vh * 0.25, vh * 0.65),
             vx: fromLeft ? PREDATOR_SPEED : -PREDATOR_SPEED,
             vy: 0,
             size: 42,
@@ -262,7 +270,7 @@ export function Aquarium() {
             if (fish.state === "eaten") continue;
             const screenY = fish.pageY - scrollY;
             if (screenY < -20 || screenY > vh + 20) continue;
-            const dist = Math.hypot(fish.x - predator.x, screenY - predator.y);
+            const dist = Math.hypot(fish.x - predator.x, fish.pageY - predator.pageY);
             if (dist < nearestDist) {
               nearestDist = dist;
               nearest = fish;
@@ -277,9 +285,8 @@ export function Aquarium() {
             predator.vx = predator.x < vw / 2 ? -PREDATOR_SPEED : PREDATOR_SPEED;
             predator.vy = 0;
           } else if (nearest) {
-            const nearestScreenY = nearest.pageY - scrollY;
             const dx = nearest.x - predator.x;
-            const dy = nearestScreenY - predator.y;
+            const dy = nearest.pageY - predator.pageY;
             const dist = Math.hypot(dx, dy) || 1;
             predator.vx = (dx / dist) * PREDATOR_SPEED;
             predator.vy = (dy / dist) * PREDATOR_SPEED;
@@ -292,7 +299,7 @@ export function Aquarium() {
         }
 
         predator.x += predator.vx * dt;
-        predator.y += predator.vy * dt;
+        predator.pageY += predator.vy * dt;
 
         if (predator.exiting && (predator.x < -120 || predator.x > vw + 120)) {
           predatorRef.current = null;
@@ -328,16 +335,17 @@ export function Aquarium() {
       }
 
       for (const food of foodRef.current) {
+        const foodScreenY = food.pageY - scrollY;
         frontCtx.save();
         frontCtx.fillStyle = "#f59e0b";
         frontCtx.beginPath();
-        frontCtx.arc(food.x, food.y, 4, 0, Math.PI * 2);
+        frontCtx.arc(food.x, foodScreenY, 4, 0, Math.PI * 2);
         frontCtx.fill();
         frontCtx.restore();
       }
 
       if (predatorRef.current) {
-        drawPredator(frontCtx, predatorRef.current);
+        drawPredator(frontCtx, predatorRef.current, predatorRef.current.pageY - scrollY);
       }
 
       rafRef.current = requestAnimationFrame(loop);
@@ -349,6 +357,7 @@ export function Aquarium() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -359,10 +368,11 @@ export function Aquarium() {
     phaseTimerRef.current = FEED_PHASE_MS;
 
     const vw = window.innerWidth;
+    const scrollY = scrollYRef.current;
     foodRef.current = Array.from({ length: FOOD_COUNT }, () => ({
       id: nextId(),
       x: randomBetween(40, Math.max(80, vw - 40)),
-      y: -20 - Math.random() * 60,
+      pageY: scrollY - 20 - Math.random() * 60,
       vy: 0,
       eaten: false,
     }));
@@ -370,8 +380,16 @@ export function Aquarium() {
 
   return (
     <>
-      <canvas ref={backCanvasRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }} />
-      <canvas ref={frontCanvasRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 40 }} />
+      <canvas
+        ref={backCanvasRef}
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 1, willChange: "transform", transform: "translateZ(0)" }}
+      />
+      <canvas
+        ref={frontCanvasRef}
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 40, willChange: "transform", transform: "translateZ(0)" }}
+      />
       <button
         type="button"
         onClick={handleFeed}
