@@ -30,7 +30,11 @@ interface Predator {
   x: number;
   y: number;
   vx: number;
+  vy: number;
   size: number;
+  startTime: number;
+  eatenCount: number;
+  exiting: boolean;
 }
 
 const FISH_COLORS = ["#2563eb", "#10b981", "#f59e0b", "#ec4899", "#8b5cf6"];
@@ -118,9 +122,13 @@ function drawPredator(ctx: CanvasRenderingContext2D, predator: Predator) {
 }
 
 const INITIAL_FISH_COUNT = 10;
-const FOOD_COUNT = 6;
-const FEED_PHASE_MS = 3000;
+const FOOD_COUNT = 4;
+const FEED_PHASE_MS = 4500;
 const RESPAWN_DELAY_MS = 3500;
+const PREDATOR_MAX_CATCH = 5;
+const PREDATOR_MAX_HUNT_MS = 5500;
+const PREDATOR_SPEED = 3;
+const PREDATOR_CATCH_RADIUS_FACTOR = 0.85;
 
 export function Aquarium() {
   const { t } = useLang();
@@ -129,7 +137,6 @@ export function Aquarium() {
   const fishRef = useRef<Fish[]>([]);
   const foodRef = useRef<Food[]>([]);
   const predatorRef = useRef<Predator | null>(null);
-  const scrollOffsetRef = useRef(0);
   const phaseRef = useRef<Phase>("idle");
   const phaseTimerRef = useRef(0);
   const rafRef = useRef(0);
@@ -173,16 +180,19 @@ export function Aquarium() {
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
+      const scrollY = window.scrollY;
 
       backCtx.clearRect(0, 0, vw, vh);
       frontCtx.clearRect(0, 0, vw, vh);
 
+      // --- food physics (gentle fall) ---
       for (const food of foodRef.current) {
-        food.vy = Math.min(food.vy + 0.12 * dt, 3.5);
+        food.vy = Math.min(food.vy + 0.05 * dt, 1.8);
         food.y += food.vy * dt;
       }
       foodRef.current = foodRef.current.filter((f) => !f.eaten && f.y < vh + 30);
 
+      // --- fish behaviour ---
       for (const fish of fishRef.current) {
         if (fish.state === "eaten") continue;
 
@@ -191,7 +201,7 @@ export function Aquarium() {
           if (!target) {
             fish.state = "swim";
           } else {
-            const screenY = fish.pageY - scrollOffsetRef.current;
+            const screenY = fish.pageY - scrollY;
             const dx = target.x - fish.x;
             const dy = target.y - screenY;
             const dist = Math.hypot(dx, dy) || 1;
@@ -211,12 +221,13 @@ export function Aquarium() {
         }
       }
 
+      // --- feeding phase: send visible fish to seek food ---
       if (phaseRef.current === "feeding") {
         const hasFood = foodRef.current.some((f) => !f.eaten);
         if (hasFood) {
           for (const fish of fishRef.current) {
             if (fish.state !== "swim") continue;
-            const screenY = fish.pageY - scrollOffsetRef.current;
+            const screenY = fish.pageY - scrollY;
             if (screenY < -20 || screenY > vh + 20) continue;
             fish.state = "seek";
           }
@@ -229,27 +240,61 @@ export function Aquarium() {
           predatorRef.current = {
             x: fromLeft ? -80 : vw + 80,
             y: randomBetween(vh * 0.25, vh * 0.65),
-            vx: (fromLeft ? 1 : -1) * 3.2,
+            vx: fromLeft ? PREDATOR_SPEED : -PREDATOR_SPEED,
+            vy: 0,
             size: 42,
+            startTime: time,
+            eatenCount: 0,
+            exiting: false,
           };
         }
       }
 
+      // --- predator phase: actively hunt the nearest visible fish ---
       if (phaseRef.current === "predator" && predatorRef.current) {
         const predator = predatorRef.current;
-        predator.x += predator.vx * dt;
+        const huntElapsed = time - predator.startTime;
 
-        for (const fish of fishRef.current) {
-          if (fish.state === "eaten") continue;
-          const screenY = fish.pageY - scrollOffsetRef.current;
-          if (screenY < -20 || screenY > vh + 20) continue;
-          const dist = Math.hypot(fish.x - predator.x, screenY - predator.y);
-          if (dist < predator.size * 0.9) {
-            fish.state = "eaten";
+        if (!predator.exiting) {
+          let nearest: Fish | null = null;
+          let nearestDist = Infinity;
+          for (const fish of fishRef.current) {
+            if (fish.state === "eaten") continue;
+            const screenY = fish.pageY - scrollY;
+            if (screenY < -20 || screenY > vh + 20) continue;
+            const dist = Math.hypot(fish.x - predator.x, screenY - predator.y);
+            if (dist < nearestDist) {
+              nearestDist = dist;
+              nearest = fish;
+            }
+          }
+
+          const shouldExit =
+            !nearest || predator.eatenCount >= PREDATOR_MAX_CATCH || huntElapsed > PREDATOR_MAX_HUNT_MS;
+
+          if (shouldExit) {
+            predator.exiting = true;
+            predator.vx = predator.x < vw / 2 ? -PREDATOR_SPEED : PREDATOR_SPEED;
+            predator.vy = 0;
+          } else if (nearest) {
+            const nearestScreenY = nearest.pageY - scrollY;
+            const dx = nearest.x - predator.x;
+            const dy = nearestScreenY - predator.y;
+            const dist = Math.hypot(dx, dy) || 1;
+            predator.vx = (dx / dist) * PREDATOR_SPEED;
+            predator.vy = (dy / dist) * PREDATOR_SPEED;
+
+            if (dist < predator.size * PREDATOR_CATCH_RADIUS_FACTOR) {
+              nearest.state = "eaten";
+              predator.eatenCount += 1;
+            }
           }
         }
 
-        if (predator.x < -120 || predator.x > vw + 120) {
+        predator.x += predator.vx * dt;
+        predator.y += predator.vy * dt;
+
+        if (predator.exiting && (predator.x < -120 || predator.x > vw + 120)) {
           predatorRef.current = null;
           phaseRef.current = "idle";
 
@@ -271,9 +316,10 @@ export function Aquarium() {
         }
       }
 
+      // --- draw ---
       for (const fish of fishRef.current) {
         if (fish.state === "eaten") continue;
-        const screenY = fish.pageY - scrollOffsetRef.current;
+        const screenY = fish.pageY - scrollY;
         if (screenY < -30 || screenY > vh + 30) continue;
         const age = time - fish.spawnTime;
         const alpha = Math.min(age / 800, 1);
@@ -309,7 +355,6 @@ export function Aquarium() {
   function handleFeed() {
     if (feedDisabled || phaseRef.current !== "idle") return;
     setFeedDisabled(true);
-    scrollOffsetRef.current = window.scrollY;
     phaseRef.current = "feeding";
     phaseTimerRef.current = FEED_PHASE_MS;
 
