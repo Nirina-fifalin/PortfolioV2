@@ -21,7 +21,7 @@ interface Fish {
 interface Food {
   id: number;
   x: number;
-  y: number;
+  pageY: number;
   vy: number;
   eaten: boolean;
 }
@@ -185,12 +185,12 @@ export function Aquarium() {
       backCtx.clearRect(0, 0, vw, vh);
       frontCtx.clearRect(0, 0, vw, vh);
 
-      // --- food physics (gentle fall) ---
+      // --- food physics (gentle fall, tracked in page-space so it follows scroll) ---
       for (const food of foodRef.current) {
         food.vy = Math.min(food.vy + 0.05 * dt, 1.8);
-        food.y += food.vy * dt;
+        food.pageY += food.vy * dt;
       }
-      foodRef.current = foodRef.current.filter((f) => !f.eaten && f.y < vh + 30);
+      foodRef.current = foodRef.current.filter((f) => !f.eaten && f.pageY - scrollY < vh + 30);
 
       // --- fish behaviour ---
       for (const fish of fishRef.current) {
@@ -202,8 +202,9 @@ export function Aquarium() {
             fish.state = "swim";
           } else {
             const screenY = fish.pageY - scrollY;
+            const targetScreenY = target.pageY - scrollY;
             const dx = target.x - fish.x;
-            const dy = target.y - screenY;
+            const dy = targetScreenY - screenY;
             const dist = Math.hypot(dx, dy) || 1;
             const speed = 2.6;
             fish.x += (dx / dist) * speed * dt;
@@ -328,10 +329,11 @@ export function Aquarium() {
       }
 
       for (const food of foodRef.current) {
+        const foodScreenY = food.pageY - scrollY;
         frontCtx.save();
         frontCtx.fillStyle = "#f59e0b";
         frontCtx.beginPath();
-        frontCtx.arc(food.x, food.y, 4, 0, Math.PI * 2);
+        frontCtx.arc(food.x, foodScreenY, 4, 0, Math.PI * 2);
         frontCtx.fill();
         frontCtx.restore();
       }
@@ -359,10 +361,11 @@ export function Aquarium() {
     phaseTimerRef.current = FEED_PHASE_MS;
 
     const vw = window.innerWidth;
+    const scrollY = window.scrollY;
     foodRef.current = Array.from({ length: FOOD_COUNT }, () => ({
       id: nextId(),
       x: randomBetween(40, Math.max(80, vw - 40)),
-      y: -20 - Math.random() * 60,
+      pageY: scrollY - 20 - Math.random() * 60,
       vy: 0,
       eaten: false,
     }));
