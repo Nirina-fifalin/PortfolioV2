@@ -141,6 +141,7 @@ export function Aquarium() {
   const phaseTimerRef = useRef(0);
   const rafRef = useRef(0);
   const lastTimeRef = useRef(0);
+  const scrollYRef = useRef(0);
   const [feedDisabled, setFeedDisabled] = useState(false);
 
   useEffect(() => {
@@ -170,6 +171,12 @@ export function Aquarium() {
 
     resize();
 
+    function handleScroll() {
+      scrollYRef.current = window.scrollY;
+    }
+    scrollYRef.current = window.scrollY;
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
     fishRef.current = Array.from({ length: INITIAL_FISH_COUNT }, (_, i) =>
       createFish(i % 2 === 0 ? "back" : "front", getDocHeight(), window.innerWidth),
     );
@@ -180,7 +187,7 @@ export function Aquarium() {
 
       const vw = window.innerWidth;
       const vh = window.innerHeight;
-      const scrollY = window.scrollY;
+      const scrollY = scrollYRef.current;
 
       backCtx.clearRect(0, 0, vw, vh);
       frontCtx.clearRect(0, 0, vw, vh);
@@ -351,6 +358,7 @@ export function Aquarium() {
     return () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener("resize", resize);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
@@ -361,7 +369,7 @@ export function Aquarium() {
     phaseTimerRef.current = FEED_PHASE_MS;
 
     const vw = window.innerWidth;
-    const scrollY = window.scrollY;
+    const scrollY = scrollYRef.current;
     foodRef.current = Array.from({ length: FOOD_COUNT }, () => ({
       id: nextId(),
       x: randomBetween(40, Math.max(80, vw - 40)),
@@ -373,8 +381,16 @@ export function Aquarium() {
 
   return (
     <>
-      <canvas ref={backCanvasRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 1 }} />
-      <canvas ref={frontCanvasRef} className="fixed inset-0 pointer-events-none" style={{ zIndex: 40 }} />
+      <canvas
+        ref={backCanvasRef}
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 1, willChange: "transform", transform: "translateZ(0)" }}
+      />
+      <canvas
+        ref={frontCanvasRef}
+        className="fixed inset-0 pointer-events-none"
+        style={{ zIndex: 40, willChange: "transform", transform: "translateZ(0)" }}
+      />
       <button
         type="button"
         onClick={handleFeed}
